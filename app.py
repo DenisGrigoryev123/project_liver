@@ -1,16 +1,11 @@
-from io import BytesIO
-
 import pydicom
 from flask import Flask, render_template, request, redirect, send_file, url_for, make_response
 import os
-from datetime import datetime
 import utils.segmentation
 import base64
 from pathlib import Path
 
 app = Flask(__name__)
-#app.config['UPLOAD_FOLDER'] = 'uploads'
-#app.config['RESULTS_FOLDER'] = 'results'
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['ALLOWED_EXTENSIONS'] = {'dcm'}
 

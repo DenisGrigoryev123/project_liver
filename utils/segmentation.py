@@ -1,23 +1,13 @@
 import torch.cuda
 
-import numpy as np
-import torch
 import cv2
 from matplotlib import pyplot as plt
-import segmentation_models_pytorch as smp, time
-#from tqdm import tqdm
 from torch.nn import functional as F
 import time
-import torchvision.transforms as T
-import pydicom
-import os
-from glob import glob
 import numpy as np
 import torch
-from torch.utils.data import Dataset, DataLoader
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
-from PIL import Image
 
 def load_image(uploaded_file):
     if uploaded_file is not None:
