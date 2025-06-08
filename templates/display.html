@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-blue: #003366;
+            --blue: #005b96;
+            --light-blue: #e1f0ff;
+            --green: #88bb5b;
+            --red: #9a8742;
+            --gray: #607d8b;
+            --light-gray: #eceff1;
+            --dark: #263238;
+            --dark-bg: #121a24;
+            --panel-bg: #1e293b;
+            --border-dark: #2d3748;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--dark-bg);
+            background-image:
+                radial-gradient(circle at 25% 25%, rgba(0, 91, 150, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(0, 200, 83, 0.1) 0%, transparent 50%);
+            color: var(--light-gray);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .medical-header {
+            background: linear-gradient(135deg, var(--dark-blue), var(--blue));
+            color: white;
+            padding: 18px 25px;
+            border-radius: 8px 8px 0 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .medical-header::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" opacity="0.1"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>');
+            background-repeat: no-repeat;
+            background-position: center right;
+        }
+
+        .medical-header h1 {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 500;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .medical-header h1::before {
+            content: "🩺";
+            margin-right: 12px;
+            font-size: 1.4rem;
+            filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.3));
+        }
+
+        .editor-container {
+            max-width: 616px;
+            margin: 20px auto;
+            background-color: var(--panel-bg);
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            border: 1px solid var(--border-dark);
+        }
+
+        .canvas-wrapper {
+            position: relative;
+            width: 100%;
+            height: 616px;
+            background-color: #000;
+            border-left: 1px solid var(--border-dark);
+            border-right: 1px solid var(--border-dark);
+        }
+
+        #original-ct {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        #contour-canvas {
+            position: absolute;
+            left: 0;
+            top: 0;
+            cursor: crosshair;
+        }
+
+        .controls {
+            background: var(--panel-bg);
+            padding: 18px 25px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            border-top: 1px solid var(--border-dark);
+            border-radius: 0 0 8px 8px;
+        }
+
+        .tool-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        #draw-btn {
+            background-color: var(--green);
+            color: white;
+        }
+
+        #draw-btn::before {
+            content: "✏️";
+        }
+
+        #erase-btn {
+            background-color: var(--red);
+            color: white;
+        }
+
+        #erase-btn::before {
+            content: "🧽";
+        }
+
+        #clear-btn {
+            background-color: var(--gray);
+            color: white;
+        }
+
+        #clear-btn::before {
+            content: "🗑️";
+        }
+
+        #save-btn {
+            background: linear-gradient(135deg, var(--blue), var(--dark-blue));
+            color: white;
+        }
+
+        #save-btn::before {
+            content: "💾";
+        }
+
+        button.active {
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        .brush-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: auto;
+        }
+
+        label {
+            font-size: 0.95rem;
+            color: var(--light-gray);
+            font-weight: 600;
+        }
+
+        input[type="range"] {
+            width: 120px;
+            height: 6px;
+            -webkit-appearance: none;
+            background: var(--border-dark);
+            border-radius: 3px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--blue);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(0, 91, 150, 0.8);
+            border: 2px solid white;
+        }
+
+        #brush-size-value {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 500;
+            width: 24px;
+            text-align: center;
+            color: white;
+            background-color: var(--blue);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .status-bar {
+            background-color: rgba(0, 0, 0, 0.3);
+            color: var(--light-gray);
+            padding: 10px 25px;
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-dark);
+        }
+
+        #mode-indicator {
+            color: var(--green);
+            font-weight: 600;
+        }
+
+        @media (max-width: 680px) {
+            .editor-container {
+                margin: 10px;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .brush-control {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            input[type="range"] {
+                flex-grow: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="editor-container">
+        <div class="medical-header">
+            <h1>Редактор контуров печени</h1>
+        </div>
+
+        <div class="status-bar">
+            <span>Режим: <span id="mode-indicator">Рисование</span></span>
+        </div>
+
+        <div class="canvas-wrapper">
+            <canvas id="original-ct" width="616" height="616"></canvas>
+            <canvas id="contour-canvas" width="616" height="616"></canvas>
+        </div>
+
+        <div class="controls">
+            <div class="tool-group">
+                <button id="draw-btn" class="active">Рисовать (D)</button>
+                <button id="erase-btn">Стереть (E)</button>
+            </div>
+
+            <div class="tool-group">
+                <button id="clear-btn">Сбросить (C)</button>
+                <button id="save-btn">Сохранить (S)</button>
+            </div>
+
+            <div class="brush-control">
+                <label for="brush-size">Толщина:</label>
+                <input type="range" id="brush-size" min="1" max="30" value="3">
+                <span id="brush-size-value">3</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='contour_editor.js') }}"></script>
+    <script>
+        // Обновление индикатора режима
+        document.getElementById('draw-btn').addEventListener('click', function() {
+            document.getElementById('mode-indicator').textContent = 'Рисование';
+            document.getElementById('mode-indicator').style.color = 'var(--medical-green)';
+        });
+
+        document.getElementById('erase-btn').addEventListener('click', function() {
+            document.getElementById('mode-indicator').textContent = 'Стирание';
+            document.getElementById('mode-indicator').style.color = 'var(--medical-red)';
+        });
+    </script>
+</body>
+</html>

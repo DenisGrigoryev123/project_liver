@@ -1,0 +1,91 @@
+/* Общие переменные */
+:root {
+  --dark-blue: #003366;
+  --blue: #005b96;
+  --light-blue: #e1f0ff;
+  --green: #88bb5b;
+  --red: #9a8742;
+  --gray: #607d8b;
+  --light-gray: #eceff1;
+  --dark: #263238;
+  --dark-bg: #121a24;
+  --panel-bg: #1e293b;
+  --border-dark: #2d3748;
+  --accent-color: #4fc3f7;
+}
+
+/* Базовые стили */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  background-color: var(--dark-bg);
+  background-image:
+    radial-gradient(circle at 25% 25%, rgba(0, 91, 150, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(0, 200, 83, 0.1) 0%, transparent 50%);
+  color: var(--light-gray);
+  line-height: 1.6;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+/* Общие компоненты */
+.medical-panel {
+  max-width: 800px;
+  margin: 20px auto;
+  background-color: var(--panel-bg);
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  border: 1px solid var(--border-dark);
+}
+
+.medical-header {
+  background: linear-gradient(135deg, var(--medical-dark-blue), var(--medical-blue));
+  color: white;
+  padding: 30px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.medical-header::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 120px;
+  height: 100%;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" opacity="0.1"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>');
+  background-repeat: no-repeat;
+  background-position: center right;
+}
+
+.medical-btn {
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: inline-block;
+}
+
+.medical-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .medical-panel {
+    margin: 10px;
+  }
+}

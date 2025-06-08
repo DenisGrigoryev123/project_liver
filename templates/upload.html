@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Анализ КТ-снимков печени</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-blue: #003366;
+            --blue: #005b96;
+            --light-blue: #e1f0ff;
+            --green: #88bb5b;
+            --red: #9a8742;
+            --gray: #607d8b;
+            --light-gray: #eceff1;
+            --dark: #263238;
+            --dark-bg: #121a24;
+            --panel-bg: #1e293b;
+            --border-dark: #2d3748;
+            --accent-color: #4fc3f7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--dark-bg);
+            background-image:
+                radial-gradient(circle at 25% 25%, rgba(0, 91, 150, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(0, 200, 83, 0.1) 0%, transparent 50%);
+            color: var(--light-gray);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: var(--panel-bg);
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            border: 1px solid var(--border-dark);
+            padding: 0;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--dark-blue), var(--blue));
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 120px;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" opacity="0.1"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>');
+            background-repeat: no-repeat;
+            background-position: center right;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            color: white;
+            margin-bottom: 10px;
+            font-weight: 700;
+            font-family: 'Roboto', sans-serif;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo::before {
+            content: "🩺";
+            margin-right: 12px;
+            filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.3));
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: var(--light-blue);
+            margin-bottom: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .upload-section {
+            text-align: center;
+            padding: 40px 30px;
+            border: 2px dashed var(--accent-color);
+            border-radius: 8px;
+            margin: 30px;
+            transition: all 0.3s ease;
+            background-color: rgba(79, 195, 247, 0.05);
+        }
+
+        .upload-section:hover {
+            background-color: rgba(79, 195, 247, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .upload-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-label {
+            background: linear-gradient(135deg, var(--blue), var(--dark-blue));
+            color: white;
+            padding: 14px 28px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            display: inline-block;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: none;
+        }
+
+        .file-label:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--green), #166336);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            background: linear-gradient(135deg, #63ad83, #166336);
+        }
+
+        .features {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 40px 30px;
+            gap: 20px;
+        }
+
+        .feature {
+            text-align: center;
+            width: 30%;
+            min-width: 200px;
+            margin-bottom: 20px;
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 25px 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-dark);
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border-color: var(--accent-color);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(79, 195, 247, 0.3);
+        }
+
+        .feature h3 {
+            color: white;
+            margin-bottom: 10px;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .feature p {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            color: var(--gray);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-dark);
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 0;
+            }
+
+            .features {
+                flex-direction: column;
+                align-items: center;
+                margin: 20px 15px;
+            }
+
+            .feature {
+                width: 100%;
+            }
+
+            .upload-section {
+                margin: 20px 15px;
+                padding: 30px 15px;
+            }
+
+            .logo {
+                font-size: 2rem;
+            }
+
+            .tagline {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo"> </div>
+            <div class="tagline">Автоматическое выделение контуров печени на КТ-снимках</div>
+        </header>
+
+        <div class="upload-section">
+            <form method="POST" action="/upload" enctype="multipart/form-data" class="upload-form">
+                <input type="file" name="file" accept=".dcm" id="fileInput" class="file-input">
+                <label for="fileInput" class="file-label">Выберите DICOM файл</label>
+                <input type="submit" value="Начать анализ" class="submit-btn">
+            </form>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <h3>Быстрый анализ</h3>
+                <p>Автоматическая обработка снимков за считанные секунды</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🎯</div>
+                <h3>Высокая точность</h3>
+                <p>Точное выделение контуров с помощью AI-алгоритмов</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🔒</div>
+                <h3>Конфиденциальность</h3>
+                <p>Ваши данные остаются в безопасности</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>© Все права защищены.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Показываем имя выбранного файла
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name || 'Файл не выбран';
+            document.querySelector('.file-label').textContent = fileName;
+        });
+    </script>
+</body>
+</html>
